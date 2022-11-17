@@ -1,18 +1,17 @@
-import {ApiProperty,ApiPropertyOptional} from '@nestjs/swagger';
-import {IsString, IsOptional,IsIn, IsDateString, IsMongoId, IsEnum, IsNotEmpty} from 'class-validator';
-import { TaskStatus } from 'src/constants.enum';
-import mongoose, { Date } from 'mongoose';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsDateString, IsEnum, IsIn, IsMongoId, IsNotEmpty, IsString } from "class-validator";
+import { TaskStatus } from "src/constants.enum";
 
-export class createTaskDto {
+export class updateTaskDto {
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
-    name:string;
+    name: string;
 
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
-    description:string;
+    description: string;
 
     @IsString({each:true})
     @IsMongoId()
@@ -23,15 +22,13 @@ export class createTaskDto {
     @IsEnum(TaskStatus,{each:true})
     @IsNotEmpty()
     @IsIn([TaskStatus.COMPLETE,TaskStatus.IN_PROGRESS])
-    @ApiPropertyOptional({enum:['complete','in progress']})
+    @ApiPropertyOptional({enum:['COMPLETE','IN_PROGRESS']})
     readonly condition: Array<string>;
 
     @IsDateString()
-    @ApiProperty({
-        example:new Date(Date.now())
-    })
+    @ApiProperty()
     deadline:Date;
-    
+
     @IsString()
     @IsMongoId()
     @ApiProperty()

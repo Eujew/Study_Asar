@@ -2,7 +2,7 @@ import { IsString, MinLength, MaxLength, IsNotEmpty, IsEnum, IsIn, IsOptional, I
 import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 import { UserStatus } from "src/constants.enum";
 
-export class createUserDto{
+export class updateUserDto{
     @IsString()
     @MinLength(3)
     @MaxLength(20)
@@ -12,25 +12,16 @@ export class createUserDto{
     @IsNotEmpty()
     username:string;
 
-    @IsEnum(UserStatus,{each:true})
-    @IsIn([UserStatus.WORKER,UserStatus.MANAGER,UserStatus.ADMIN])
+    //@IsEnum(UserStatus,{each:true})
+    //@IsIn([UserStatus.WORKER,UserStatus.MANAGER,UserStatus.ADMIN])
     @IsNotEmpty()
-    @ApiProperty({enum:['worker','manager','admin']})
+    @ApiProperty({enum:['WORKER','MANAGER','ADMIN']})
     readonly roles:Array<string>;
-
-    @IsString()
-    @MinLength(10)
-    @ApiProperty({
-        example:'Parabellum'
-})
-    @IsNotEmpty()
-    password:string;
 
     @IsEmail()
     @ApiProperty({
         example:'mail@mail.ru'
     })
     @IsNotEmpty()
-    email:string;
-   
+    readonly email:string;
 }

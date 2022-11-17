@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, Types } from 'mongoose';
-import { taskStatus } from './taskStatus.enum';
+import mongoose, { HydratedDocument} from 'mongoose';
+import {TaskStatus} from '../../constants.enum';
 
 
 export type ExecuteTask = HydratedDocument<Tasks>;
@@ -15,10 +15,10 @@ export class Tasks {
   description:string; 
 
   @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref: 'Users'}] })
-  performers: string[];
+  performers:[string];
   
-  @Prop({required:true,enum: Object.values(taskStatus)})
-  condition:string; 
+  @Prop([{required:true,type:String, enum: Object.values(TaskStatus)}])
+  condition:[string]; 
 
   @Prop({required:true})
   deadline:Date; 
@@ -27,4 +27,4 @@ export class Tasks {
   taskLord: string;
 }
 
-export const TaskCreater = SchemaFactory.createForClass(Tasks);
+export const TaskSchema = SchemaFactory.createForClass(Tasks);
