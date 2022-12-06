@@ -1,30 +1,28 @@
 import {ApiProperty,ApiPropertyOptional} from '@nestjs/swagger';
-import {IsString, IsOptional,IsIn, IsDateString, IsMongoId, IsEnum, IsNotEmpty} from 'class-validator';
+import {IsString,IsIn, IsDateString, IsMongoId, IsEnum, IsNotEmpty, IsArray, IsNumber, IsInt, IsBoolean} from 'class-validator';
 import { TaskStatus } from 'src/constants.enum';
-import mongoose, { Date } from 'mongoose';
+import mongoose, { Date, ObjectId} from 'mongoose';
 
 export class createTaskDto {
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
-    name:string;
+    title:string;
 
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
     description:string;
-
-    @IsString({each:true})
+    
     @IsMongoId()
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsNotEmpty()
-    performers: Array<string>;
+    performers: ObjectId;
 
     @IsEnum(TaskStatus,{each:true})
     @IsNotEmpty()
-    @IsIn([TaskStatus.COMPLETE,TaskStatus.IN_PROGRESS])
-    @ApiPropertyOptional({enum:['complete','in progress']})
-    readonly condition: Array<string>;
+    @IsIn([TaskStatus.CREATED])
+    readonly condition: string;
 
     @IsDateString()
     @ApiProperty({
@@ -32,8 +30,17 @@ export class createTaskDto {
     })
     deadline:Date;
     
-    @IsString()
     @IsMongoId()
     @ApiProperty()
-    taskLord: string;
+    taskLord: ObjectId;
+
+    @IsNumber()
+    readonly payment: number;
+    
+    @IsNumber()
+    readonly reward: number;
+
+    @IsBoolean()
+    readonly Done: boolean;
+
 }

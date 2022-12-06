@@ -1,36 +1,25 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsDateString, IsEnum, IsIn, IsMongoId, IsNotEmpty, IsString } from "class-validator";
-import { TaskStatus } from "src/constants.enum";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsMongoId, IsNotEmpty, IsString, IsArray } from "class-validator";
+import { ObjectId } from "mongoose";
 
 export class updateTaskDto {
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
-    name: string;
+    title: string;
 
     @IsString()
     @ApiProperty()
     @IsNotEmpty()
     description: string;
 
-    @IsString({each:true})
-    @IsMongoId()
-    @ApiProperty()
-    @IsNotEmpty()
-    performers: Array<string>;
-
-    @IsEnum(TaskStatus,{each:true})
-    @IsNotEmpty()
-    @IsIn([TaskStatus.COMPLETE,TaskStatus.IN_PROGRESS])
-    @ApiPropertyOptional({enum:['COMPLETE','IN_PROGRESS']})
-    readonly condition: Array<string>;
-
     @IsDateString()
     @ApiProperty()
     deadline:Date;
 
-    @IsString()
     @IsMongoId()
     @ApiProperty()
-    taskLord: string;
+    @IsNotEmpty()
+    performers: ObjectId;
+
 }

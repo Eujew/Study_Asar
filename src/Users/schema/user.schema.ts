@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { UserStatus } from 'src/constants.enum';
+
 export type UserRoles = Users & Document;
 
 @Schema()
 export class Users {
-
+  
   @Prop({type:String, required:true})
   username: string;
 
@@ -17,6 +18,10 @@ export class Users {
 
   @Prop({type:String,required:true})
   email: string;  
+
+  @Prop({type:Number,default:0})
+  balance: number; 
+  
 }
 
 export const UserSchema = SchemaFactory.createForClass(Users);

@@ -9,22 +9,31 @@ export type ExecuteTask = HydratedDocument<Tasks>;
 export class Tasks {
 
   @Prop({required:true})
-  name: string;  
+  title: string;  
 
   @Prop({required:true})
   description:string; 
 
-  @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref: 'Users'}] })
-  performers:[string];
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
+  performers:string;
   
-  @Prop([{required:true,type:String, enum: Object.values(TaskStatus)}])
-  condition:[string]; 
+  @Prop({required:true,type:String, enum: Object.values(TaskStatus),default:'created'})
+  condition:string; 
 
   @Prop({required:true})
   deadline:Date; 
 
-  @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref: 'Users'}],required:true})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Users'})
   taskLord: string;
+
+  @Prop({default:Math.floor(Math.random()*20)+10})
+  payment:number;
+
+  @Prop({default:Math.floor(Math.random()*20)+30})
+  reward:number;
+
+  @Prop({type:Boolean,required:true,default:false})
+  Done:boolean;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Tasks);

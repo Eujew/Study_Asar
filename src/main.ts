@@ -4,12 +4,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const options = new DocumentBuilder()
+  const config = new DocumentBuilder()
   .setTitle('Task Manager')
   .setDescription('Task manager API')
+  .addTag('API')
   .setVersion('1.0')
   .build();
-const document = SwaggerModule.createDocument(app,options);
+const document = SwaggerModule.createDocument(app, config);
 SwaggerModule.setup('api', app, document);
 await app.listen(8080);
 }

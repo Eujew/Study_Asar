@@ -1,4 +1,4 @@
-import { IsString, MinLength, MaxLength, IsNotEmpty, IsEnum, IsIn, IsOptional, IsEmail } from "class-validator";
+import { IsString, MinLength, MaxLength, IsNotEmpty, IsEnum, IsIn, IsOptional, IsEmail, IsNumber } from "class-validator";
 import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 import { UserStatus } from "src/constants.enum";
 
@@ -32,5 +32,9 @@ export class createUserDto{
     })
     @IsNotEmpty()
     email:string;
+
+    @IsNumber()
+    balance:number = 0;
    
 }
+
