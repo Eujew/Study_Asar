@@ -1,5 +1,5 @@
 import {ApiProperty,ApiPropertyOptional} from '@nestjs/swagger';
-import {IsString,IsIn, IsDateString, IsMongoId, IsEnum, IsNotEmpty, IsArray, IsNumber, IsInt, IsBoolean} from 'class-validator';
+import {IsString,IsIn, IsDateString, IsMongoId, IsEnum, IsNotEmpty, IsNumber} from 'class-validator';
 import { TaskStatus } from 'src/constants.enum';
 import mongoose, { Date, ObjectId} from 'mongoose';
 
@@ -40,7 +40,5 @@ export class createTaskDto {
     @IsNumber()
     readonly reward: number;
 
-    @IsBoolean()
-    readonly Done: boolean;
 
 }

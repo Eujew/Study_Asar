@@ -3,10 +3,6 @@ import { IsNumber, IsString } from "class-validator";
 
 export class TransactionDto {
     @IsString()
-    @ApiProperty()
-    description:string;
-
-    @IsString()
     typeOfOpperation:string;
 
     @IsNumber()

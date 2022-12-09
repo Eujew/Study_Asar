@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Tasks } from "./schema/task.schema";
 import { Model } from "mongoose";
@@ -7,27 +7,24 @@ import { createTaskDto } from "./dto/createTasks.dto";
 import { updateTaskConditionDto } from "./dto/complete_task_condition";
 import { UserService } from "src/Users/user.service";
 import { TransactionService } from "src/Payments/transaction.service";
-import { TransactionDto } from "src/Payments/dto/transaction.dto";
+
 
 @Injectable()
 export class TaskService{
     constructor (
       private readonly ExecUser: UserService,
       @InjectModel('Task') private readonly TaskModel: Model<Tasks>,
-      private readonly transaction:TransactionService
-
+      private readonly transaction:TransactionService,
       ){}
 
-    async create(CreateTaskDto:createTaskDto,TransactionDto:TransactionDto) {
+    async create(CreateTaskDto:createTaskDto) {
         const createdTask = new this.TaskModel(CreateTaskDto);
         const task = await createdTask.save();
         const thisUser = await this.ExecUser.findOne(createdTask.performers);
-        const UserBalance = thisUser.balance;
-        this.transaction.UserBalanceAfterPayment(UserBalance,createdTask.payment);
-        const TransactionInfo = await this.transaction.SaveTransactionInfo(TransactionDto);
-        TransactionInfo.debit = createdTask.payment;
-        TransactionInfo.typeOfOpperation = "debit";
-        TransactionInfo.save();
+        thisUser.roles.filter((role)=>{
+            if ( role === "manager"||role === "admin") throw BadRequestException;
+        });
+        this.transaction.UserBalanceAfterPayment(createdTask.performers,thisUser.balance,createdTask.payment,createdTask.condition); 
         return task;
     }
 
@@ -43,16 +40,12 @@ export class TaskService{
         return this.TaskModel.findByIdAndUpdate(id, UpdateTaskDto);
      }
 
-      async updateCondition(id:string, updateTaskConditionDto:updateTaskConditionDto,TransactionDto:TransactionDto){
+      async updateCondition(id:string, updateTaskConditionDto:updateTaskConditionDto){
          const thisTask = await this.TaskModel.findById(id);
          const thisUser = await this.ExecUser.findOne(thisTask.performers);
-         const UserBalance = thisUser.balance;
-         this.transaction.UserBalanceAfterReward(UserBalance,thisTask.reward);
-         const TransactionInfo = await this.transaction.SaveTransactionInfo(TransactionDto);
-         TransactionInfo.credit = thisTask.reward;
-         TransactionInfo.typeOfOpperation = "credit";
-         TransactionInfo.save();
-         return this.TaskModel.findByIdAndUpdate(id, updateTaskConditionDto);
+         this.transaction.UserBalanceAfterReward(thisTask.performers,thisUser.balance,thisTask.reward, thisTask.condition);
+         const updatedTask = this.TaskModel.findByIdAndUpdate(id, updateTaskConditionDto);
+         return updatedTask;
       }
 
      async deleteTask(id:string){

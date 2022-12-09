@@ -3,8 +3,6 @@ import { Module } from '@nestjs/common';
 import { TaskSchema} from "./schema/task.schema";
 import { TaskService } from "./task.service";
 import { TaskController } from "./task.controller";
-//import { UserService } from "src/Users/user.service";
-//import { TransactionService } from "src/Payments/transaction.service";
 import { TransactionModule } from "src/Payments/transaction.module";
 import { UserModule } from "src/Users/user.module";
 import { TransactionSchema } from "src/Payments/schema/transaction.schema";

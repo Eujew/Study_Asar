@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsMongoId, IsNotEmpty, IsString, IsArray } from "class-validator";
+import { IsDateString, IsMongoId, IsNotEmpty, IsString} from "class-validator";
 import { ObjectId } from "mongoose";
 
 export class updateTaskDto {

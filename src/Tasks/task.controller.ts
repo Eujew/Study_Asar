@@ -10,17 +10,16 @@ import { TransactionDto } from "src/Payments/dto/transaction.dto";
 import { TransactionService } from "src/Payments/transaction.service";
 
 @Controller('task')
-
 export class TaskController{
-    constructor (private readonly TransactionService:TransactionService,
-                 private readonly TaskService:TaskService){}
+    constructor (private readonly TaskService:TaskService,
+                 private readonly TransactionService:TransactionService){}
 
     @Post()
     //@UseGuards(AuthGuard('jwt'))
     //@Roles(UserStatus.ADMIN,UserStatus.MANAGER)
-    async create(@Body() createTaskDto: createTaskDto, 
-                 @Body() TransactionDto:TransactionDto) {
-         await this.TaskService.create(createTaskDto,TransactionDto);
+    async create(@Body() createTaskDto: createTaskDto) {
+         await this.TaskService.create(createTaskDto);
+      
       }
 
      @Get()
@@ -44,7 +43,7 @@ export class TaskController{
      updateCondition(@Param('id') id:string,
                      @Query() updateTaskConditionDto:updateTaskConditionDto,
                      @Body() TransactionDto:TransactionDto){
-        return this.TaskService.updateCondition(id, updateTaskConditionDto,TransactionDto);
+        return this.TaskService.updateCondition(id, updateTaskConditionDto);
      }
 
      @Delete(':id')

@@ -9,7 +9,7 @@ import { TransactionService } from "./transaction.service";
     imports:[MongooseModule.forFeature([{ name: 'User', schema: UserSchema, collection:'users'}]),
     UserModule,
     MongooseModule.forFeature([{ name: 'Transaction', schema: TransactionSchema, collection:'transaction'}]),
-],
+],  
     providers:[TransactionService],
     exports: [TransactionService],
 })

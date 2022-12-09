@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
-import { IsBoolean, IsEnum, IsIn, IsNotEmpty } from "class-validator";
+import { ApiPropertyOptional} from "@nestjs/swagger";
+import {  IsEnum, IsIn, IsNotEmpty } from "class-validator";
 import { TaskStatus } from "src/constants.enum";
 
 export class updateTaskConditionDto{
@@ -10,8 +10,4 @@ export class updateTaskConditionDto{
         {enum:['complete'],default:'complete'})
     readonly condition: string ;
 
-    @IsBoolean()
-    @ApiProperty(
-        {default:true})
-    readonly Done:boolean;
 }

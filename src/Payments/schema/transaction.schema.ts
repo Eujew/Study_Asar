@@ -1,16 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+//import { HydratedDocument } from "mongoose";
 
 
-export type ExecuteTransaction = HydratedDocument<Transactions>;
+export type ExecuteTransaction = Transactions & Document;
 
 @Schema({
     timestamps:true
 })
 export class Transactions{
-
-    @Prop({required:true,type:String})
-    description:string;
 
     @Prop({type:String})
     typeOfOpperation:string;
