@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import { TransactionModule } from './Payments/transaction.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 dotenv.config({path:"./config.env"});
@@ -13,6 +14,7 @@ const environment = process.env.MONGODB_WRITE_CONNECTION_STRING || 'development'
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     UserModule,
     TaskModule,
     ConfigModule.forRoot({

@@ -11,8 +11,7 @@ import { TransactionService } from "src/Payments/transaction.service";
 
 @Controller('task')
 export class TaskController{
-    constructor (private readonly TaskService:TaskService,
-                 private readonly TransactionService:TransactionService){}
+    constructor (private readonly TaskService:TaskService){}
 
     @Post()
     //@UseGuards(AuthGuard('jwt'))
@@ -41,8 +40,7 @@ export class TaskController{
 
      @Put(':id/condition')
      updateCondition(@Param('id') id:string,
-                     @Query() updateTaskConditionDto:updateTaskConditionDto,
-                     @Body() TransactionDto:TransactionDto){
+                     @Query() updateTaskConditionDto:updateTaskConditionDto){
         return this.TaskService.updateCondition(id, updateTaskConditionDto);
      }
 

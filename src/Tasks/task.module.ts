@@ -6,14 +6,17 @@ import { TaskController } from "./task.controller";
 import { TransactionModule } from "src/Payments/transaction.module";
 import { UserModule } from "src/Users/user.module";
 import { TransactionSchema } from "src/Payments/schema/transaction.schema";
+import { UserSchema } from "src/Users/schema/user.schema";
+import { ScheduleModule } from "@nestjs/schedule";
 
 
 @Module({
     imports: [
-    MongooseModule.forFeature([{ name: 'Task', schema: TaskSchema, collection:'tasks'}]), 
     TransactionModule,
     UserModule,
-    MongooseModule.forFeature([{ name: 'Transaction', schema: TransactionSchema, collection:'transaction'}])
+    MongooseModule.forFeature([{ name: 'Task', schema: TaskSchema, collection:'tasks'}]), 
+    MongooseModule.forFeature([{ name: 'Transaction', schema: TransactionSchema, collection:'transaction'}]),
+    MongooseModule.forFeature([{name:'User', schema:UserSchema, collection:'Users'}]),
 ],
 
     providers: [TaskService],

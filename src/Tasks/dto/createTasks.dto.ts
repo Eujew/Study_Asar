@@ -17,7 +17,7 @@ export class createTaskDto {
     @IsMongoId()
     @ApiPropertyOptional()
     @IsNotEmpty()
-    performers: ObjectId;
+    performers: string;
 
     @IsEnum(TaskStatus,{each:true})
     @IsNotEmpty()
@@ -32,7 +32,7 @@ export class createTaskDto {
     
     @IsMongoId()
     @ApiProperty()
-    taskLord: ObjectId;
+    taskLord: string;
 
     @IsNumber()
     readonly payment: number;

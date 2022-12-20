@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-//import { HydratedDocument } from "mongoose";
+import { IsNumberString } from "class-validator";
+
 
 
 export type ExecuteTransaction = Transactions & Document;
@@ -8,6 +9,9 @@ export type ExecuteTransaction = Transactions & Document;
     timestamps:true
 })
 export class Transactions{
+
+    @Prop({type:IsNumberString})
+    UserID:string;
 
     @Prop({type:String})
     typeOfOpperation:string;

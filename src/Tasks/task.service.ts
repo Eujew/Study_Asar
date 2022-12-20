@@ -7,54 +7,78 @@ import { createTaskDto } from "./dto/createTasks.dto";
 import { updateTaskConditionDto } from "./dto/complete_task_condition";
 import { UserService } from "src/Users/user.service";
 import { TransactionService } from "src/Payments/transaction.service";
+import { Interval } from "@nestjs/schedule";
+import { Users } from "src/Users/schema/user.schema";
+import { randomInt } from "crypto";
+import { of } from "rxjs";
+//import { TaskModule } from "./task.module";
 
 
 @Injectable()
 export class TaskService{
     constructor (
       private readonly ExecUser: UserService,
-      @InjectModel('Task') private readonly TaskModel: Model<Tasks>,
-      private readonly transaction:TransactionService,
+      private readonly transaction : TransactionService,
+      @InjectModel( 'Task' ) 
+      private readonly TaskModel : Model<Tasks>,
+      @InjectModel( 'User' ) 
+      private readonly UserModel : Model<Users>,
       ){}
 
-    async create(CreateTaskDto:createTaskDto) {
-        const createdTask = new this.TaskModel(CreateTaskDto);
+    async create( CreateTaskDto : createTaskDto ) {
+        const createdTask = new this.TaskModel( CreateTaskDto );
         const task = await createdTask.save();
-        const thisUser = await this.ExecUser.findOne(createdTask.performers);
-        thisUser.roles.filter((role)=>{
-            if ( role === "manager"||role === "admin") throw BadRequestException;
+        const thisUser = await this.ExecUser.findOne( createdTask.performers );
+        thisUser.roles.filter(( role )=>{
+            if ( role === "manager" ||role === "admin" ) throw BadRequestException;
         });
-        this.transaction.UserBalanceAfterPayment(createdTask.performers,thisUser.balance,createdTask.payment,createdTask.condition); 
+        this.transaction.UserBalanceAfterPayment( createdTask.performers , thisUser.balance , createdTask.payment ); 
         return task;
     }
 
     async findAll(){
-        return await this.TaskModel.find().exec();
+            return await this.TaskModel.find().exec();
     }
     
-    async findOne(id:string){
-        return await this.TaskModel.findById(id).exec();
+    async findOne( id:string ){
+            return await this.TaskModel.findById( id ).exec();
      }
 
-     async update(id: string, UpdateTaskDto:updateTaskDto) {
-        return this.TaskModel.findByIdAndUpdate(id, UpdateTaskDto);
+     async update( id : string,
+        UpdateTaskDto : updateTaskDto ) {
+            return this.TaskModel.findByIdAndUpdate( id , UpdateTaskDto );
      }
 
-      async updateCondition(id:string, updateTaskConditionDto:updateTaskConditionDto){
-         const thisTask = await this.TaskModel.findById(id);
-         const thisUser = await this.ExecUser.findOne(thisTask.performers);
-         this.transaction.UserBalanceAfterReward(thisTask.performers,thisUser.balance,thisTask.reward, thisTask.condition);
-         const updatedTask = this.TaskModel.findByIdAndUpdate(id, updateTaskConditionDto);
-         return updatedTask;
+      async updateCondition( id : string, 
+        updateTaskConditionDto : updateTaskConditionDto ){
+            const thisTask = await this.TaskModel.findById( id );
+            const thisUser = await this.ExecUser.findOne( thisTask.performers );
+            this.transaction.UserBalanceAfterReward( thisTask.performers , thisUser.balance , thisTask.reward );
+            const updatedTask = this.TaskModel.findByIdAndUpdate( id , updateTaskConditionDto );
+                return updatedTask;
       }
 
-     async deleteTask(id:string){
-        return this.TaskModel.findByIdAndDelete(id);
+     async deleteTask( id : string ){
+            return this.TaskModel.findByIdAndDelete( id );
      }
 
-}
-   
+    @Interval(5000)
+    public async ChangeUserForExpiredTask(){
+        
+        const Workers = await this.UserModel.find( { roles : "worker" } , { id : 1 } );
+        const rndWorker = await Workers[ Math.floor( Math.random() * ( Workers.length-1 ))];
 
+        const ExpiredTask = await this.TaskModel.findOneAndUpdate(
+            { deadline : { $lt : new Date( Date.now() )}},
+            { $set : {deadline : new Date('2023-12-20T10:57:47.847Z')}});
+        
+        this.TaskModel.updateOne( 
+            { id : ExpiredTask.id},
+            { $set : { performers :  rndWorker}}); 
+        return;
+   }
+
+}
 
 
 
