@@ -68,13 +68,9 @@ export class TaskService{
         const Workers = await this.UserModel.find( { roles : "worker" } , { id : 1 } );
         const rndWorker = await Workers[ Math.floor( Math.random() * ( Workers.length-1 ))];
 
-        const ExpiredTask = await this.TaskModel.findOneAndUpdate(
+        await this.TaskModel.findOneAndUpdate(
             { deadline : { $lt : new Date( Date.now() )}},
-            { $set : {deadline : new Date('2023-12-20T10:57:47.847Z')}});
-        
-        this.TaskModel.updateOne( 
-            { id : ExpiredTask.id},
-            { $set : { performers :  rndWorker}}); 
+            { $set : {performers :  rndWorker, deadline : new Date('2023-12-20T10:57:47.847Z')}});
         return;
    }
 
